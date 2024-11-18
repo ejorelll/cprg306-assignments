@@ -1,13 +1,23 @@
 "use client";
 import { useState } from 'react';
-import ItemList from './item-list';
-import NewItem from './new-item';
-import MealIdeas from './meal-ideas';
+import { useRouter } from 'next/navigation'; // for redirection
+import { useUserAuth } from '../../week-9/_utils/auth-context'; // import your AuthContext
+import ItemList from '../../week-8/item-list';
+import NewItem from '../../week-8/new-item';
+import MealIdeas from '../../week-8/meal-ideas';
 import itemsData from './items.json';
 
 const Page = () => {
+  const {user} = useUserAuth(); // get the current user from AuthContext
+  const router = useRouter(); // initialize router for navigation
   const [items, setItems] = useState(itemsData);
   const [selectedItemName, setSelectedItemName] = useState('');
+
+  // redirect to login page if the user is not authenticated
+  if (!user) {
+    router.push('/week-9/login'); // adjust path if necessary
+    return null; // return null to prevent rendering while redirecting
+  }
 
   const handleAddItem = (newItem) => {
     setItems([...items, newItem]);
